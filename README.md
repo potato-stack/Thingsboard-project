@@ -1,6 +1,7 @@
 # ThingsBoard IoT Gateway/Sensors Data Collector
-## _CO2017 Assignment - Semester 212 - HCMUT_
-------------------------
+
+_This is our submission for the assignment in course CO2017 (Operating Systems) - Semester 221 - Ho Chi Minh University of Technology._
+
 ## Authors
 - Hà Trung Quyền
 - Quách Minh Đức
