@@ -96,13 +96,13 @@
                 "value": null,
                 "predicate": {
                   "type": "NUMERIC",
-                  "operation": "LESS_OR_EQUAL",
+                  "operation": "LESS",
                   "value": {
                     "defaultValue": 0,
                     "userValue": null,
                     "dynamicValue": {
                       "sourceType": "CURRENT_DEVICE",
-                      "sourceAttribute": "temperatureLowAlarmThreshold",
+                      "sourceAttribute": "temperatureHighAlarmThreshold",
                       "inherit": false
                     }
                   }
@@ -111,7 +111,7 @@
               {
                 "key": {
                   "type": "ATTRIBUTE",
-                  "key": "temperatureLowAlarmFlag"
+                  "key": "temperatureHighAlarmFlag"
                 },
                 "valueType": "BOOLEAN",
                 "value": null,
@@ -142,15 +142,15 @@
       },
       {
         "id": "dc6ef091-8cf7-86b0-4760-e42b963db9cf",
-        "alarmType": "Low Humidity",
+        "alarmType": "Low Temperature",
         "createRules": {
-          "MAJOR": {
+          "CRITICAL": {
             "condition": {
               "condition": [
                 {
                   "key": {
                     "type": "ATTRIBUTE",
-                    "key": "humidityAlarmFlag"
+                    "key": "temperatureLowAlarmFlag"
                   },
                   "valueType": "BOOLEAN",
                   "value": null,
@@ -167,19 +167,19 @@
                 {
                   "key": {
                     "type": "TIME_SERIES",
-                    "key": "humidity"
+                    "key": "temperature"
                   },
                   "valueType": "NUMERIC",
                   "value": null,
                   "predicate": {
                     "type": "NUMERIC",
-                    "operation": "LESS",
+                    "operation": "LESS_OR_EQUAL",
                     "value": {
-                      "defaultValue": 45,
+                      "defaultValue": 0,
                       "userValue": null,
                       "dynamicValue": {
                         "sourceType": "CURRENT_DEVICE",
-                        "sourceAttribute": "humidityAlarmThreshold",
+                        "sourceAttribute": "temperatureLowAlarmThreshold",
                         "inherit": false
                       }
                     }
@@ -191,11 +191,60 @@
               }
             },
             "schedule": null,
-            "alarmDetails": "Current humidity = ${humidity}",
+            "alarmDetails": "Current temperature = ${temperature}",
             "dashboardId": null
           }
         },
-        "clearRule": null,
+        "clearRule": {
+          "condition": {
+            "condition": [
+              {
+                "key": {
+                  "type": "ATTRIBUTE",
+                  "key": "temperatureLowAlarmFlag"
+                },
+                "valueType": "BOOLEAN",
+                "value": null,
+                "predicate": {
+                  "type": "BOOLEAN",
+                  "operation": "EQUAL",
+                  "value": {
+                    "defaultValue": true,
+                    "userValue": null,
+                    "dynamicValue": null
+                  }
+                }
+              },
+              {
+                "key": {
+                  "type": "TIME_SERIES",
+                  "key": "temperature"
+                },
+                "valueType": "NUMERIC",
+                "value": null,
+                "predicate": {
+                  "type": "NUMERIC",
+                  "operation": "GREATER",
+                  "value": {
+                    "defaultValue": 0,
+                    "userValue": null,
+                    "dynamicValue": {
+                      "sourceType": "CURRENT_DEVICE",
+                      "sourceAttribute": "temperatureLowAlarmThreshold",
+                      "inherit": false
+                    }
+                  }
+                }
+              }
+            ],
+            "spec": {
+              "type": "SIMPLE"
+            }
+          },
+          "schedule": null,
+          "alarmDetails": null,
+          "dashboardId": null
+        },
         "propagate": false,
         "propagateToOwner": false,
         "propagateToOwnerHierarchy": false,

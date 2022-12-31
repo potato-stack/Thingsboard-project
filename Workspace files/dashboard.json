@@ -28,8 +28,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -109,20 +109,20 @@
                   "postFuncBody": null
                 },
                 {
+                  "name": "COD",
+                  "type": "timeseries",
+                  "label": "COD",
+                  "color": "#3f51b5",
+                  "settings": {},
+                  "_hash": 0.36140762789034087
+                },
+                {
                   "name": "N-NH4+",
                   "type": "timeseries",
                   "label": "N-NH4+",
                   "color": "#9c27b0",
                   "settings": {},
                   "_hash": 0.0752182866910116
-                },
-                {
-                  "name": "COD",
-                  "type": "timeseries",
-                  "label": "COD",
-                  "color": "#3f51b5",
-                  "settings": {},
-                  "_hash": 0.5182553946521149
                 },
                 {
                   "name": "latitude",
@@ -239,7 +239,7 @@
                 "useShowWidgetActionFunction": null,
                 "showWidgetActionFunction": "return true;",
                 "type": "custom",
-                "customFunction": "let $injector = widgetContext.$scope.$injector;\nlet dialogs = $injector.get(widgetContext.servicesMap.get('dialogs'));\nlet deviceService = $injector.get(widgetContext.servicesMap.get('deviceService'));\nlet attributeService = $injector.get(widgetContext.servicesMap.get('attributeService'));\n\nlet rpcBody = \n{\nmethod: 'Set sensor',\nparams: 'Off'\n};\nlet attributesArray = [];\n\nopenSendingRpcDialog();\n\nfunction openSendingRpcDialog() {\n    attributeService.getEntityAttributes(entityId, 'SERVER_SCOPE').subscribe(\n            function (attributes) \n            {       \n                    if(attributes[0].value == true) \n                        {\n                            rpcBody.params = 'Off';\n                            attributesArray = [{ key: \"active\", value: false}];\n                        }\n                    else\n                        {\n                            rpcBody.params = 'On';\n                            attributesArray = [{ key: \"active\", value: true}];\n                        }\n                    console.log(attributes[0]);\n            }\n        );\n        \n    let title = 'Configurating \"' + entityName + '\"';\n    let content =\n        'Are you sure you want to change sensor: ' + entityName + ' state ?';\n    dialogs.confirm(title, content, 'Cancel', 'Send')\n        .subscribe(\n            function(result) {\n                if (result) {\n                    sendRpcRequest();\n                }\n            }\n        );\n}\n\nfunction sendRpcRequest() {\n            \n            deviceService.sendOneWayRpcCommand(entityId.id, rpcBody).subscribe(\n            function success() \n            {   var i = 1; \n                function myLoop()\n                {   \n                setTimeout(function() {\n                attributeService.getEntityAttributes(entityId, 'CLIENT_SCOPE').subscribe(\n                function (attributes) \n                {\n                    console.log(i);\n                    if(attributes[2].value == rpcBody.params)\n                    {   i = 11;\n                            console.log(i);\n                            attributeService.saveEntityAttributes(entityId, \"SERVER_SCOPE\", attributesArray).subscribe(\n                             function success() {\n                                 console.log('success');\n                                 showSuccessDialog();\n                             },\n                             function fail() {\n                             console.log('fail');\n                             }\n                         );\n                    }\n                    else i++;  \n                    if(i == 10)\n                    {\n                        showErrorDialog()\n                    }\n                    if (i < 10) \n                    {           \n                        myLoop();            \n                    }\n                })\n                }, 1000);\n            }\n                myLoop();\n                widgetContext.updateAliases();\n            },\n            function fail() \n            {\n                 console.log(\"send fail\");\n                showErrorDialog();\n            }\n        );\n    \n}\n    function showSuccessDialog() {\n        let title = 'Sucess';\n        let content =\n            'Succes setting your sensor';\n        dialogs.alert(title, content, 'CLOSE').subscribe(\n            function(result) {}\n        );\n    }    \n    function showErrorDialog() {\n        let title = 'Error';\n        let content =\n            'An error occurred while setting the sensor. Please try again.';\n        dialogs.alert(title, content, 'CLOSE').subscribe(\n            function(result) {}\n        );\n    }",
+                "customFunction": "let $injector = widgetContext.$scope.$injector;\nlet dialogs = $injector.get(widgetContext.servicesMap.get('dialogs'));\nlet deviceService = $injector.get(widgetContext.servicesMap.get('deviceService'));\nlet attributeService = $injector.get(widgetContext.servicesMap.get('attributeService'));\n\nlet rpcBody = \n{\nmethod: 'Set sensor',\nparams: 'Off'\n};\nlet attributesArray = [];\n\nopenSendingRpcDialog();\n\nfunction openSendingRpcDialog() {\n    attributeService.getEntityAttributes(entityId, 'SERVER_SCOPE').subscribe(\n            function (attributes) \n            {       \n                    if(attributes[0].value == true) \n                        {\n                            rpcBody.params = 'Off';\n                            attributesArray = [{ key: \"active\", value: false}];\n                        }\n                    else\n                        {\n                            rpcBody.params = 'On';\n                            attributesArray = [{ key: \"active\", value: true}];\n                        }\n                    console.log(attributes[0]);\n            }\n        );\n        \n    let title = 'Configurating \"' + entityName + '\"';\n    let content =\n        'Are you sure you want to change sensor: ' + entityName + ' state ?';\n    dialogs.confirm(title, content, 'Cancel', 'Send')\n        .subscribe(\n            function(result) {\n                if (result) {\n                    sendRpcRequest();\n                }\n            }\n        );\n}\n\nfunction sendRpcRequest() {\n            \n            deviceService.sendOneWayRpcCommand(entityId.id, rpcBody).subscribe(\n            function success() \n            {   var i = 1; \n                function myLoop()\n                {   \n                setTimeout(function() {\n                attributeService.getEntityAttributes(entityId, 'CLIENT_SCOPE').subscribe(\n                function (attributes) \n                {\n                    console.log(i);\n                    if(attributes[1].value == rpcBody.params)\n                    {   i = 11;\n                            console.log(i);\n                            attributeService.saveEntityAttributes(entityId, \"SERVER_SCOPE\", attributesArray).subscribe(\n                             function success() {\n                                 console.log('success');\n                                 showSuccessDialog();\n                             },\n                             function fail() {\n                             console.log('fail');\n                             }\n                         );\n                    }\n                    else i++;  \n                    if(i == 10)\n                    {\n                        showErrorDialog()\n                    }\n                    if (i < 10) \n                    {           \n                        myLoop();            \n                    }\n                })\n                }, 1000);\n            }\n                myLoop();\n                widgetContext.updateAliases();\n            },\n            function fail() \n            {\n                 console.log(\"send fail\");\n                showErrorDialog();\n            }\n        );\n    \n}\n    function waitingDialog() \n    {\n            let title = 'Configurating';\n            let content =\n                'Changching sensor state, please wait';\n            dialogs.alert(title, content, 'CLOSE').subscribe(\n                function(result) {}\n            );\n        }\n    function showSuccessDialog() {\n        let title = 'Sucess';\n        let content =\n            'Succes setting your sensor';\n        dialogs.alert(title, content, 'CLOSE').subscribe(\n            function(result) {}\n        );\n    }    \n    function showErrorDialog() {\n        let title = 'Error';\n        let content =\n            'An error occurred while setting the sensor. Please try again.';\n        dialogs.alert(title, content, 'CLOSE').subscribe(\n            function(result) {}\n        );\n    }",
                 "openInSeparateDialog": false,
                 "openInPopover": false,
                 "id": "b3e5e77f-7ce8-48e2-1c4a-893f64d8d030"
@@ -383,7 +383,11 @@
           "actions": {},
           "datasources": [],
           "alarmsMaxCountLoad": 0,
-          "alarmsFetchSize": 100
+          "alarmsFetchSize": 100,
+          "alarmStatusList": [],
+          "alarmSeverityList": [],
+          "alarmTypeList": [],
+          "searchPropagatedAlarms": false
         },
         "id": "7943196b-eedb-d422-f9c3-b32d379ad172"
       },
@@ -400,7 +404,7 @@
             {
               "type": "entity",
               "name": null,
-              "entityAliasId": "7e0becbe-4f59-f869-0311-147375a62cf2",
+              "entityAliasId": "12ae98c7-1ea2-52cf-64d5-763e9d993547",
               "filterId": null,
               "dataKeys": [
                 {
@@ -449,13 +453,13 @@
             "selectedTab": 0,
             "realtime": {
               "realtimeType": 0,
-              "timewindowMs": 36000000,
+              "timewindowMs": 15000,
               "quickInterval": "CURRENT_DAY",
-              "interval": 3600000
+              "interval": 1000
             },
             "aggregation": {
               "type": "AVG",
-              "limit": 25000
+              "limit": 5000
             }
           },
           "showTitle": true,
@@ -532,16 +536,16 @@
             {
               "type": "entity",
               "name": null,
-              "entityAliasId": "7e0becbe-4f59-f869-0311-147375a62cf2",
+              "entityAliasId": "12ae98c7-1ea2-52cf-64d5-763e9d993547",
               "filterId": null,
               "dataKeys": [
                 {
-                  "name": "N-NH4",
+                  "name": "COD",
                   "type": "timeseries",
-                  "label": "N-NH4",
+                  "label": "COD",
                   "color": "#2196f3",
                   "settings": {},
-                  "_hash": 0.3098117941620453
+                  "_hash": 0.12902070346142236
                 }
               ],
               "latestDataKeys": null
@@ -549,16 +553,21 @@
           ],
           "timewindow": {
             "hideInterval": false,
+            "hideLastInterval": false,
+            "hideQuickInterval": false,
             "hideAggregation": false,
             "hideAggInterval": false,
+            "hideTimezone": false,
             "selectedTab": 0,
             "realtime": {
-              "timewindowMs": 604800000,
-              "interval": 1800000
+              "realtimeType": 0,
+              "timewindowMs": 900000,
+              "quickInterval": "CURRENT_DAY",
+              "interval": 120000
             },
             "aggregation": {
               "type": "AVG",
-              "limit": 25000
+              "limit": 5000
             }
           },
           "showTitle": true,
@@ -593,7 +602,7 @@
             },
             "smoothLines": true
           },
-          "title": "NH4",
+          "title": "COD",
           "dropShadow": true,
           "enableFullscreen": true,
           "titleStyle": {
@@ -653,22 +662,6 @@
                   "postFuncBody": "return value || \"\";"
                 },
                 {
-                  "name": "N-NH4",
-                  "type": "timeseries",
-                  "label": "N-NH4",
-                  "color": "#e91e63",
-                  "settings": {},
-                  "_hash": 0.951695179632355
-                },
-                {
-                  "name": "COD",
-                  "type": "timeseries",
-                  "label": "COD",
-                  "color": "#ffeb3b",
-                  "settings": {},
-                  "_hash": 0.35425058314201197
-                },
-                {
                   "name": "longitude",
                   "type": "attribute",
                   "label": "longitude",
@@ -696,9 +689,25 @@
                   "name": "type",
                   "type": "entityField",
                   "label": "Type",
-                  "color": "#03a9f4",
+                  "color": "#ffeb3b",
                   "settings": {},
-                  "_hash": 0.055787306111394486
+                  "_hash": 0.06436505252579172
+                },
+                {
+                  "name": "COD",
+                  "type": "timeseries",
+                  "label": "COD",
+                  "color": "#ff9800",
+                  "settings": {},
+                  "_hash": 0.7860461638860725
+                },
+                {
+                  "name": "N-NH4",
+                  "type": "timeseries",
+                  "label": "N-NH4",
+                  "color": "#ff9800",
+                  "settings": {},
+                  "_hash": 0.38192485915006347
                 }
               ]
             },
@@ -759,9 +768,9 @@
                   "name": "type",
                   "type": "entityField",
                   "label": "Type",
-                  "color": "#ff9800",
+                  "color": "#03a9f4",
                   "settings": {},
-                  "_hash": 0.9727863108846344,
+                  "_hash": 0.8761334945124919,
                   "aggregationType": null,
                   "units": null,
                   "decimals": null,
@@ -786,8 +795,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -1000,8 +1009,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -1157,8 +1166,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -1241,6 +1250,283 @@
         },
         "id": "0a430429-9078-9ae6-2b67-e4a15a2bf8bf"
       },
+      "38f9f1df-72ef-aec8-970e-72bf717cdb41": {
+        "isSystemType": true,
+        "bundleAlias": "input_widgets",
+        "typeAlias": "update_multiple_attributes",
+        "type": "latest",
+        "title": "New widget",
+        "sizeX": 6,
+        "sizeY": 6,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": null,
+              "entityAliasId": "12ae98c7-1ea2-52cf-64d5-763e9d993547",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "latitude",
+                  "type": "attribute",
+                  "label": "Latitude",
+                  "color": "#607d8b",
+                  "settings": {
+                    "dataKeyType": "server",
+                    "dataKeyValueType": "double",
+                    "step": 0.1,
+                    "required": false,
+                    "requiredErrorMessage": "",
+                    "invalidDateErrorMessage": "",
+                    "isEditable": "editable",
+                    "dataKeyHidden": false
+                  },
+                  "_hash": 0.6611936029604872,
+                  "units": null,
+                  "decimals": null,
+                  "funcBody": null,
+                  "usePostProcessing": null,
+                  "postFuncBody": null
+                },
+                {
+                  "name": "longitude",
+                  "type": "attribute",
+                  "label": "Longitude",
+                  "color": "#9c27b0",
+                  "settings": {
+                    "dataKeyType": "server",
+                    "dataKeyValueType": "double",
+                    "required": false,
+                    "requiredErrorMessage": "",
+                    "invalidDateErrorMessage": "",
+                    "isEditable": "editable",
+                    "dataKeyHidden": false,
+                    "step": 0.1
+                  },
+                  "_hash": 0.15440529767536004,
+                  "units": null,
+                  "decimals": null,
+                  "funcBody": null,
+                  "usePostProcessing": null,
+                  "postFuncBody": null
+                }
+              ]
+            }
+          ],
+          "timewindow": {
+            "displayValue": "",
+            "selectedTab": 0,
+            "realtime": {
+              "realtimeType": 1,
+              "interval": 1000,
+              "timewindowMs": 60000,
+              "quickInterval": "CURRENT_DAY"
+            },
+            "history": {
+              "historyType": 0,
+              "interval": 1000,
+              "timewindowMs": 60000,
+              "fixedTimewindow": {
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
+              },
+              "quickInterval": "CURRENT_DAY"
+            },
+            "aggregation": {
+              "type": "AVG",
+              "limit": 2500
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "#fff",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showActionButtons": true,
+            "showResultMessage": true,
+            "fieldsAlignment": "column",
+            "fieldsInRow": 2,
+            "groupTitle": "${entityName}",
+            "widgetTitle": "Sensor settings"
+          },
+          "title": "New Update Multiple Attributes",
+          "dropShadow": true,
+          "enableFullscreen": false,
+          "enableDataExport": false,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "useDashboardTimewindow": true,
+          "showLegend": false,
+          "actions": {},
+          "showTitleIcon": false,
+          "titleIcon": null,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "displayTimewindow": true
+        },
+        "id": "38f9f1df-72ef-aec8-970e-72bf717cdb41"
+      },
+      "c5ea9382-57e5-6abb-9081-515f60e73b52": {
+        "isSystemType": true,
+        "bundleAlias": "input_widgets",
+        "typeAlias": "markers_placement_openstreetmap",
+        "type": "latest",
+        "title": "New widget",
+        "sizeX": 6,
+        "sizeY": 6,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "dataKeys": [
+                {
+                  "name": "longitude",
+                  "type": "attribute",
+                  "label": "longitude",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.3640193654284214
+                },
+                {
+                  "name": "latitude",
+                  "type": "attribute",
+                  "label": "latitude",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.49020393887695923
+                },
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "temperature",
+                  "color": "#f44336",
+                  "settings": {},
+                  "_hash": 0.5885892766009955,
+                  "postFuncBody": "return value || \"\";"
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "humidity",
+                  "color": "#ffc107",
+                  "settings": {},
+                  "_hash": 0.21077893588180707,
+                  "postFuncBody": "return value || \"\";"
+                },
+                {
+                  "name": "active",
+                  "type": "attribute",
+                  "label": "active",
+                  "color": "#607d8b",
+                  "settings": {},
+                  "_hash": 0.34722983638504346
+                }
+              ],
+              "entityAliasId": "12ae98c7-1ea2-52cf-64d5-763e9d993547"
+            }
+          ],
+          "timewindow": {
+            "displayValue": "",
+            "selectedTab": 0,
+            "realtime": {
+              "realtimeType": 1,
+              "interval": 1000,
+              "timewindowMs": 60000,
+              "quickInterval": "CURRENT_DAY"
+            },
+            "history": {
+              "historyType": 0,
+              "interval": 1000,
+              "timewindowMs": 60000,
+              "fixedTimewindow": {
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
+              },
+              "quickInterval": "CURRENT_DAY"
+            },
+            "aggregation": {
+              "type": "AVG",
+              "limit": 2500
+            }
+          },
+          "showTitle": false,
+          "backgroundColor": "#fff",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "fitMapBounds": true,
+            "latKeyName": "latitude",
+            "lngKeyName": "longitude",
+            "showLabel": true,
+            "label": "${entityName}",
+            "tooltipPattern": "<b>${entityName}</b><br/><br/><b>Temperature:</b> ${temperature:1} °C<br/><b>Humidity:</b> ${humidity:0} %<br/><br/><link-act name='delete'>Delete</link-act>",
+            "markerImageSize": 34,
+            "useColorFunction": false,
+            "markerImages": [
+              "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJzdmc0NDA4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48c3R5bGU+LnN0MntmaWxsOiNmNDQzMzZ9PC9zdHlsZT48ZyBpZD0ibGF5ZXIxIj48ZyBpZD0icGF0aDY4ODEtMy01LTUtMS04LTQtNC03LTgiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNDYuNDM4IC0yNzYuMDI4KSIgb3BhY2l0eT0iLjg5MiI+PHJhZGlhbEdyYWRpZW50IGlkPSJTVkdJRF8xXyIgY3g9IjMwODUuMjE1IiBjeT0iMzE3OC40NTgiIHI9IjQ5LjkwMSIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguNjc5MyAuMDA3NiAtLjUwOSAuNTYxMiAtMjMyLjYyOSAtMTQxMS43MjUpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xODgiLz48L3JhZGlhbEdyYWRpZW50PjxwYXRoIGQ9Ik0yODUuNiAzODguNWMxMC4zLTEyLjQgNC40LTIyLjQtMTQuNC0yMi40LTE4LjkgMC00Mi40IDEwLTUzLjkgMjIuNC0xNi44IDE4IC40IDIzLjUtLjIgMzUtLjEgMS44IDMuOSAxLjggNyAwIDE5LjgtMTEuNSA0Ni41LTE3IDYxLjUtMzUiIGZpbGw9InVybCgjU1ZHSURfMV8pIi8+PC9nPjxwYXRoIGlkPSJwYXRoNjg4MS0zLTUtNS0xLTgtNC00IiBjbGFzcz0ic3QyIiBkPSJNMTI0LjcgNjkuMWMtLjktMjcuNS0yMi4zLTQ5LjgtNDkuOC00OS44cy00OSAyMi4zLTQ5LjggNDkuOGMtMS4zIDQwLjEgMzAuNyA1Mi4yIDQ0LjcgNzggMi4yIDQgOCA0IDEwLjEgMCAxNC4xLTI1LjggNDYuMS0zNy45IDQ0LjgtNzgiLz48L2c+PGcgaWQ9Imc0OTI4Ij48Y2lyY2xlIGlkPSJwYXRoNDk3OCIgY2xhc3M9InN0MiIgY3g9Ijc0LjkiIGN5PSI2OS4xIiByPSI0OS45Ii8+PGcgaWQ9Imc0OTE1Ij48cGF0aCBpZD0icGF0aDY4ODMtMi0zLTUtMi00LTktNC05IiBkPSJNNzQuOCAxMDYuNGMtMjAuNiAwLTM3LjQtMTYuNy0zNy40LTM3LjQgMC0yMC42IDE2LjctMzcuNCAzNy40LTM3LjQgMjAuNiAwIDM3LjQgMTYuNyAzNy40IDM3LjRzLTE2LjcgMzcuNC0zNy40IDM3LjQiIGZpbGw9IiNmZmYiLz48L2c+PC9nPjxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik05NS45IDQ2LjZWNDloLTEwdi0yLjVsMTAgLjF6bS0yIDUuM2gtOHYyLjVoOHYtMi41em0tOCA3LjloNnYtMi41aC02djIuNXptNCAyLjloLTR2Mi41aDR2LTIuNXptLTQgNy44aDJWNjhoLTJ2Mi41em0xLjUgMTRjMCA2LjktNS41IDEyLjUtMTIuMyAxMi41cy0xMi4zLTUuNi0xMi4zLTEyLjVjMC00LjUgMi4zLTguNSA2LjEtMTAuN1Y0NS41YzAtMy41IDIuOC02LjMgNi4yLTYuM3M2LjIgMi44IDYuMiA2LjN2MjguM2MzLjggMi4yIDYuMSA2LjMgNi4xIDEwLjd6bS0yLjQgMGMwLTMuOC0yLjEtNy4yLTUuNC04LjlsLS43LS4zVjQ1LjVjMC0yLjEtMS43LTMuOC0zLjgtMy44LTIuMSAwLTMuOCAxLjctMy44IDMuOHYyOS44bC0uNy4zYy0zLjMgMS43LTUuNCA1LjEtNS40IDguOSAwIDUuNSA0LjQgMTAgOS45IDEwUzg1IDkwIDg1IDg0LjV6bS0yLjEgMGMwIDQuNC0zLjUgOC03LjggOHMtNy44LTMuNi03LjgtOGMwLTMuNiAyLjQtNi44IDUuOC03LjdsLjUtLjFWNjEuNWgzLjF2MTUuMmwuNS4xYzMuMyAxIDUuNyA0LjEgNS43IDcuN3ptLTcuNC01LjNjLS4yLS44LTEtMS40LTEuOS0xLjItMyAuNy01IDMuMy01IDYuNCAwIC45LjcgMS42IDEuNiAxLjZzMS42LS43IDEuNi0xLjZjMC0xLjYgMS4xLTMgMi42LTMuMy43LS4yIDEuMy0xIDEuMS0xLjl6Ii8+PC9zdmc+",
+              "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJzdmc0NDA4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48c3R5bGU+LnN0MntmaWxsOiMyNzg2MjJ9PC9zdHlsZT48ZyBpZD0ibGF5ZXIxIj48ZyBpZD0icGF0aDY4ODEtMy01LTUtMS04LTQtNC03LTgiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNDYuNDM4IC0yNzYuMDI4KSIgb3BhY2l0eT0iLjg5MiI+PHJhZGlhbEdyYWRpZW50IGlkPSJTVkdJRF8xXyIgY3g9IjMwODUuMjE1IiBjeT0iMzE3OC40NTgiIHI9IjQ5LjkwMSIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguNjc5MyAuMDA3NiAtLjUwOSAuNTYxMiAtMjMyLjYyOSAtMTQxMS43MjUpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xODgiLz48L3JhZGlhbEdyYWRpZW50PjxwYXRoIGQ9Ik0yODUuNiAzODguNWMxMC4zLTEyLjQgNC40LTIyLjQtMTQuNC0yMi40LTE4LjkgMC00Mi40IDEwLTUzLjkgMjIuNC0xNi44IDE4IC40IDIzLjUtLjIgMzUtLjEgMS44IDMuOSAxLjggNyAwIDE5LjgtMTEuNSA0Ni41LTE3IDYxLjUtMzUiIGZpbGw9InVybCgjU1ZHSURfMV8pIi8+PC9nPjxwYXRoIGlkPSJwYXRoNjg4MS0zLTUtNS0xLTgtNC00IiBjbGFzcz0ic3QyIiBkPSJNMTI0LjcgNjkuMWMtLjktMjcuNS0yMi4zLTQ5LjgtNDkuOC00OS44cy00OSAyMi4zLTQ5LjggNDkuOGMtMS4zIDQwLjEgMzAuNyA1Mi4yIDQ0LjcgNzggMi4yIDQgOCA0IDEwLjEgMCAxNC4xLTI1LjggNDYuMS0zNy45IDQ0LjgtNzgiLz48L2c+PGcgaWQ9Imc0OTI4Ij48Y2lyY2xlIGlkPSJwYXRoNDk3OCIgY2xhc3M9InN0MiIgY3g9Ijc0LjkiIGN5PSI2OS4xIiByPSI0OS45Ii8+PGcgaWQ9Imc0OTE1Ij48cGF0aCBpZD0icGF0aDY4ODMtMi0zLTUtMi00LTktNC05IiBkPSJNNzQuOCAxMDYuNGMtMjAuNiAwLTM3LjQtMTYuNy0zNy40LTM3LjQgMC0yMC42IDE2LjctMzcuNCAzNy40LTM3LjQgMjAuNiAwIDM3LjQgMTYuNyAzNy40IDM3LjRzLTE2LjcgMzcuNC0zNy40IDM3LjQiIGZpbGw9IiNmZmYiLz48L2c+PC9nPjxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik05NS45IDQ2LjZWNDloLTEwdi0yLjVsMTAgLjF6bS0yIDUuM2gtOHYyLjVoOHYtMi41em0tOCA3LjloNnYtMi41aC02djIuNXptNCAyLjloLTR2Mi41aDR2LTIuNXptLTQgNy44aDJWNjhoLTJ2Mi41em0xLjUgMTRjMCA2LjktNS41IDEyLjUtMTIuMyAxMi41cy0xMi4zLTUuNi0xMi4zLTEyLjVjMC00LjUgMi4zLTguNSA2LjEtMTAuN1Y0NS41YzAtMy41IDIuOC02LjMgNi4yLTYuM3M2LjIgMi44IDYuMiA2LjN2MjguM2MzLjggMi4yIDYuMSA2LjMgNi4xIDEwLjd6bS0yLjQgMGMwLTMuOC0yLjEtNy4yLTUuNC04LjlsLS43LS4zVjQ1LjVjMC0yLjEtMS43LTMuOC0zLjgtMy44LTIuMSAwLTMuOCAxLjctMy44IDMuOHYyOS44bC0uNy4zYy0zLjMgMS43LTUuNCA1LjEtNS40IDguOSAwIDUuNSA0LjQgMTAgOS45IDEwUzg1IDkwIDg1IDg0LjV6bS0yLjEgMGMwIDQuNC0zLjUgOC03LjggOHMtNy44LTMuNi03LjgtOGMwLTMuNiAyLjQtNi44IDUuOC03LjdsLjUtLjFWNjEuNWgzLjF2MTUuMmwuNS4xYzMuMyAxIDUuNyA0LjEgNS43IDcuN3ptLTcuNC01LjNjLS4yLS44LTEtMS40LTEuOS0xLjItMyAuNy01IDMuMy01IDYuNCAwIC45LjcgMS42IDEuNiAxLjZzMS42LS43IDEuNi0xLjZjMC0xLjYgMS4xLTMgMi42LTMuMy43LS4yIDEuMy0xIDEuMS0xLjl6Ii8+PC9zdmc+Cg=="
+            ],
+            "useMarkerImageFunction": true,
+            "color": "#fe7569",
+            "mapProvider": "OpenStreetMap.HOT",
+            "showTooltip": true,
+            "autocloseTooltip": true,
+            "defaultCenterPosition": "0,0",
+            "customProviderTileUrl": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "showTooltipAction": "click",
+            "polygonKeyName": "coordinates",
+            "polygonOpacity": 0.5,
+            "polygonStrokeOpacity": 1,
+            "polygonStrokeWeight": 1,
+            "zoomOnClick": true,
+            "showCoverageOnHover": true,
+            "animate": true,
+            "maxClusterRadius": 80,
+            "removeOutsideVisibleBounds": true,
+            "defaultZoomLevel": 5,
+            "labelFunction": "var color;\nif(dsData[dsIndex].active !== \"true\"){\n    color = 'rgb(255, 0, 0)';\n} else {\n    color = 'rgb(39, 134, 34)';\n}\nreturn '<span style=\"border: solid ' + color + '; border-radius: 10px; color: ' + color + '; background-color: #fff; padding: 3px 5px; font-size: 14px\">' + \n           '${entityLabel}' + \n        '</span>'",
+            "markerImageFunction": "var res;\nif(dsData[dsIndex].active !== \"true\"){\n\tvar res = {\n\t    url: images[0],\n\t    size: 48\n\t}\n} else {\n    var res = {\n\t    url: images[1],\n\t    size: 48\n\t}\n}\nreturn res;",
+            "useLabelFunction": true,
+            "provider": "openstreet-map",
+            "draggableMarker": true,
+            "editablePolygon": true,
+            "mapPageSize": 16384
+          },
+          "title": "New Markers Placement - OpenStreetMap",
+          "dropShadow": true,
+          "enableFullscreen": false,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "useDashboardTimewindow": true,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {
+            "tooltipAction": [
+              {
+                "name": "delete",
+                "icon": "more_horiz",
+                "type": "custom",
+                "customFunction": "var entityDatasource = widgetContext.mapInstance.datasources.filter(\n    function(entity) {\n        return entity.entityId === entityId.id\n    });\n\nwidgetContext.mapInstance.saveMarkerLocation(entityDatasource[0], null, null).subscribe(function success() {\n        widgetContext.updateAliases();\n});",
+                "id": "54c293c4-9ca6-e34f-dc6a-0271944c1c66"
+              }
+            ]
+          },
+          "showTitleIcon": false,
+          "titleIcon": null,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "displayTimewindow": true,
+          "enableDataExport": false
+        },
+        "id": "c5ea9382-57e5-6abb-9081-515f60e73b52"
+      },
       "90a63646-1807-92b2-ee2e-98a3392663f0": {
         "isSystemType": true,
         "bundleAlias": "cards",
@@ -1264,8 +1550,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -1430,12 +1716,18 @@
           "actions": {
             "headerButton": [
               {
-                "id": "85b803db-90f2-5c63-1388-a378e0eb10d6",
                 "name": "Edit location",
                 "icon": "map",
+                "useShowWidgetActionFunction": null,
+                "showWidgetActionFunction": "return true;",
                 "type": "openDashboardState",
-                "targetDashboardStateId": "map",
-                "setEntityId": false
+                "targetDashboardStateId": "edit motor",
+                "setEntityId": false,
+                "stateEntityParamName": null,
+                "openRightLayout": null,
+                "openInSeparateDialog": false,
+                "openInPopover": false,
+                "id": "85b803db-90f2-5c63-1388-a378e0eb10d6"
               },
               {
                 "name": "Add",
@@ -1551,8 +1843,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -1617,6 +1909,14 @@
                   "_hash": 0.3506061850264526
                 },
                 {
+                  "name": "COD",
+                  "type": "timeseries",
+                  "label": "COD",
+                  "color": "#9c27b0",
+                  "settings": {},
+                  "_hash": 0.4046905344607068
+                },
+                {
                   "name": "latitude",
                   "type": "attribute",
                   "label": "Latitude",
@@ -1657,14 +1957,6 @@
                   "color": "#9c27b0",
                   "settings": {},
                   "_hash": 0.5791219682264641
-                },
-                {
-                  "name": "N-NH4",
-                  "type": "timeseries",
-                  "label": "N-NH4",
-                  "color": "#9c27b0",
-                  "settings": {},
-                  "_hash": 0.09228958631440864
                 }
               ]
             }
@@ -1698,16 +1990,6 @@
               }
             ],
             "actionCellButton": [
-              {
-                "name": "Edit",
-                "icon": "edit",
-                "type": "customPretty",
-                "customHtml": "<form #editEntityForm=\"ngForm\" [formGroup]=\"editEntityFormGroup\"\n      (ngSubmit)=\"save()\" class=\"edit-entity-form\">\n    <mat-toolbar color=\"primary\">\n        <h2>Edit sensor {{entityName}}</h2>\n        <span fxFlex></span>\n        <button mat-icon-button (click)=\"cancel()\" type=\"button\">\n            <mat-icon class=\"material-icons\">close</mat-icon>\n        </button>\n    </mat-toolbar>\n    <mat-progress-bar color=\"warn\" mode=\"indeterminate\" *ngIf=\"isLoading$ | async\">\n    </mat-progress-bar>\n    <div style=\"height: 4px;\" *ngIf=\"!(isLoading$ | async)\"></div>\n    <div mat-dialog-content fxLayout=\"column\">\n        <mat-form-field fxFlex class=\"mat-block\">\n            <mat-label>Sensor name</mat-label>\n            <input matInput formControlName=\"entityName\" readonly>\n        </mat-form-field>\n        <div formGroupName=\"attributes\" fxLayout=\"column\">\n            <mat-slide-toggle formControlName=\"temperatureAlarmFlag\">\n                High temperature alarm\n            </mat-slide-toggle>\n            <mat-form-field fxFlex class=\"mat-block\">\n                <mat-label>High temperature threshold, °C</mat-label>\n                <input type=\"number\" step=\"any\" matInput\n                        [required] = \"editEntityFormGroup.get('attributes').get('temperatureAlarmFlag').value\"\n                        formControlName=\"temperatureAlarmThreshold\">\n                <mat-error *ngIf=\"editEntityFormGroup.get('attributes').get('temperatureAlarmThreshold').hasError('required')\">\n                    High temperature threshold is required.\n                </mat-error>\n            </mat-form-field>\n\n            <mat-slide-toggle formControlName=\"humidityAlarmFlag\">\n                Low humidity alarm\n            </mat-slide-toggle>\n\n            <mat-form-field fxFlex class=\"mat-block\">\n                <mat-label>Low humidity threshold, %</mat-label>\n                <input type=\"number\" step=\"any\" matInput\n                       [required] = \"editEntityFormGroup.get('attributes').get('humidityAlarmFlag').value\"\n                       formControlName=\"humidityAlarmThreshold\">\n                <mat-error *ngIf=\"editEntityFormGroup.get('attributes').get('humidityAlarmThreshold').hasError('required')\">\n                    Low humidity threshold is required.\n                </mat-error>\n            </mat-form-field>\n            <mat-form-field fxFlex class=\"mat-block\">\n                <mat-label>Latitude</mat-label>\n                <input type=\"number\" step=\"0.1\" matInput\n                       formControlName=\"latitude\">\n            </mat-form-field>\n            <mat-form-field fxFlex class=\"mat-block\">\n                <mat-label>Longitude</mat-label>\n                <input type=\"number\" step=\"0.1\" matInput\n                       formControlName=\"longitude\">\n            </mat-form-field>\n        </div>\n    </div>\n    <div mat-dialog-actions fxLayoutAlign=\"end center\">\n        <button mat-button color=\"primary\"\n                type=\"button\"\n                [disabled]=\"(isLoading$ | async)\"\n                (click)=\"cancel()\" cdkFocusInitial>\n            Cancel\n        </button>\n        <button mat-raised-button color=\"primary\"\n                type=\"submit\"\n                [disabled]=\"(isLoading$ | async) || editEntityForm.invalid || !editEntityForm.dirty\">\n            Save\n        </button>\n    </div>\n</form>",
-                "customCss": ".edit-entity-form{\n    width: 300px;\n}",
-                "customFunction": "let $injector = widgetContext.$scope.$injector;\nlet customDialog = $injector.get(widgetContext.servicesMap.get('customDialog'));\nlet attributeService = $injector.get(widgetContext.servicesMap.get('attributeService'));\n\nopenEditEntityDialog();\n\nfunction openEditEntityDialog() {\n    customDialog.customDialog(htmlTemplate, EditEntityDialogController).subscribe();\n}\n\nfunction EditEntityDialogController(instance) {\n    let vm = instance;\n    \n    vm.entityId = entityId;\n    vm.entityName = entityName;\n    vm.attributes = {};\n    \n    vm.editEntityFormGroup = vm.fb.group({\n        entityName: [''],\n        attributes: vm.fb.group({\n            temperatureAlarmFlag: [false],\n            temperatureAlarmThreshold: [{value: null, disabled: true}],\n            humidityAlarmFlag: [false],\n            humidityAlarmThreshold: [{value: null, disabled: true}],\n            latitude: [null],\n            longitude: [null]\n        })\n    });\n    \n    vm.editEntityFormGroup.get('attributes').get('temperatureAlarmFlag').valueChanges\n    .subscribe(activate => {\n        if (activate) {\n            vm.editEntityFormGroup.get('attributes').get('temperatureAlarmThreshold').enable();\n        } else {\n            vm.editEntityFormGroup.get('attributes').get('temperatureAlarmThreshold').disable();\n        }\n    });\n    \n    vm.editEntityFormGroup.get('attributes').get('humidityAlarmFlag').valueChanges\n    .subscribe(activate => {\n        if (activate) {\n            vm.editEntityFormGroup.get('attributes').get('humidityAlarmThreshold').enable();\n        } else {\n            vm.editEntityFormGroup.get('attributes').get('humidityAlarmThreshold').disable();\n        }\n    });\n    \n    \n    getEntityInfo();\n    \n    \n    vm.save = function() {\n        vm.editEntityFormGroup.markAsPristine();\n        saveAttributes(entityId).subscribe(\n            function () {\n                vm.dialogRef.close(null);\n            }\n        );\n    };\n    \n    vm.cancel = function() {\n        vm.dialogRef.close(null);\n    };\n    \n    function getEntityAttributes(attributes) {\n        for (var i = 0; i < attributes.length; i++) {\n            vm.attributes[attributes[i].key] = attributes[i].value;\n        }\n    }\n    \n    function getEntityInfo() {\n        attributeService.getEntityAttributes(entityId, 'SERVER_SCOPE').subscribe(\n            function (attributes) {\n                getEntityAttributes(attributes);\n                vm.editEntityFormGroup.patchValue({\n                    entityName: vm.entityName,\n                    attributes: vm.attributes\n                });\n                // if(vm.attributes.temperatureAlarmFlag) {\n                //     vm.editEntityFormGroup.get('attributes').get('temperatureAlarmThreshold').enable();\n                // }\n                // if(vm.attributes.humidityAlarmFlag) {\n                //     vm.editEntityFormGroup.get('attributes').get('humidityAlarmThreshold').enable();\n                // }\n            }\n        );\n    }\n    \n    function saveAttributes(entityId) {\n        let attributes = vm.editEntityFormGroup.get('attributes').value;\n        let attributesArray = [];\n        for (let key in attributes) {\n            if (attributes[key] !== vm.attributes[key]) {\n                attributesArray.push({key: key, value: attributes[key]});\n            }\n        }\n        if (attributesArray.length > 0) {\n            return attributeService.saveEntityAttributes(entityId, \"SERVER_SCOPE\", attributesArray);\n        } else {\n            return widgetContext.rxjs.of([]);\n        }\n    }\n}",
-                "customResources": [],
-                "id": "7506576f-87ba-d3a0-88fb-e304d451776d"
-              },
               {
                 "name": "Delete",
                 "icon": "delete",
@@ -1775,8 +2057,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -1819,7 +2101,7 @@
             {
               "type": "entity",
               "name": null,
-              "entityAliasId": "7e0becbe-4f59-f869-0311-147375a62cf2",
+              "entityAliasId": "a5f7e2d3-669b-a1ec-3077-5c2315bd8358",
               "filterId": null,
               "dataKeys": [
                 {
@@ -1964,6 +2246,147 @@
         },
         "id": "ef44d58b-2bee-0f37-e612-3f4b0099bd3f"
       },
+      "a9311cc0-779e-ca01-546f-66ec7a887fcc": {
+        "isSystemType": true,
+        "bundleAlias": "input_widgets",
+        "typeAlias": "markers_placement_openstreetmap",
+        "type": "latest",
+        "title": "New widget",
+        "sizeX": 24,
+        "sizeY": 12,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": null,
+              "entityAliasId": "a493c9e8-a5e9-1ffe-d454-f995e5ed78d7",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "longitude",
+                  "type": "attribute",
+                  "label": "longitude",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.3640193654284214
+                },
+                {
+                  "name": "latitude",
+                  "type": "attribute",
+                  "label": "latitude",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.49020393887695923
+                },
+                {
+                  "name": "active",
+                  "type": "attribute",
+                  "label": "active",
+                  "color": "#607d8b",
+                  "settings": {},
+                  "_hash": 0.34722983638504346
+                }
+              ]
+            }
+          ],
+          "timewindow": {
+            "displayValue": "",
+            "selectedTab": 0,
+            "realtime": {
+              "realtimeType": 1,
+              "interval": 1000,
+              "timewindowMs": 60000,
+              "quickInterval": "CURRENT_DAY"
+            },
+            "history": {
+              "historyType": 0,
+              "interval": 1000,
+              "timewindowMs": 60000,
+              "fixedTimewindow": {
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
+              },
+              "quickInterval": "CURRENT_DAY"
+            },
+            "aggregation": {
+              "type": "AVG",
+              "limit": 2500
+            }
+          },
+          "showTitle": false,
+          "backgroundColor": "#fff",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "fitMapBounds": true,
+            "latKeyName": "latitude",
+            "lngKeyName": "longitude",
+            "showLabel": true,
+            "label": "${entityName}",
+            "tooltipPattern": "<b>${entityName}</b><br/><br/><b>Temperature:</b> ${temperature:1} °C<br/><b>Humidity:</b> ${humidity:0} %<br/><br/><link-act name='delete'>Delete</link-act>",
+            "markerImageSize": 34,
+            "useColorFunction": false,
+            "markerImages": [
+              "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJzdmc0NDA4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48c3R5bGU+LnN0MntmaWxsOiNmNDQzMzZ9PC9zdHlsZT48ZyBpZD0ibGF5ZXIxIj48ZyBpZD0icGF0aDY4ODEtMy01LTUtMS04LTQtNC03LTgiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNDYuNDM4IC0yNzYuMDI4KSIgb3BhY2l0eT0iLjg5MiI+PHJhZGlhbEdyYWRpZW50IGlkPSJTVkdJRF8xXyIgY3g9IjMwODUuMjE1IiBjeT0iMzE3OC40NTgiIHI9IjQ5LjkwMSIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguNjc5MyAuMDA3NiAtLjUwOSAuNTYxMiAtMjMyLjYyOSAtMTQxMS43MjUpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xODgiLz48L3JhZGlhbEdyYWRpZW50PjxwYXRoIGQ9Ik0yODUuNiAzODguNWMxMC4zLTEyLjQgNC40LTIyLjQtMTQuNC0yMi40LTE4LjkgMC00Mi40IDEwLTUzLjkgMjIuNC0xNi44IDE4IC40IDIzLjUtLjIgMzUtLjEgMS44IDMuOSAxLjggNyAwIDE5LjgtMTEuNSA0Ni41LTE3IDYxLjUtMzUiIGZpbGw9InVybCgjU1ZHSURfMV8pIi8+PC9nPjxwYXRoIGlkPSJwYXRoNjg4MS0zLTUtNS0xLTgtNC00IiBjbGFzcz0ic3QyIiBkPSJNMTI0LjcgNjkuMWMtLjktMjcuNS0yMi4zLTQ5LjgtNDkuOC00OS44cy00OSAyMi4zLTQ5LjggNDkuOGMtMS4zIDQwLjEgMzAuNyA1Mi4yIDQ0LjcgNzggMi4yIDQgOCA0IDEwLjEgMCAxNC4xLTI1LjggNDYuMS0zNy45IDQ0LjgtNzgiLz48L2c+PGcgaWQ9Imc0OTI4Ij48Y2lyY2xlIGlkPSJwYXRoNDk3OCIgY2xhc3M9InN0MiIgY3g9Ijc0LjkiIGN5PSI2OS4xIiByPSI0OS45Ii8+PGcgaWQ9Imc0OTE1Ij48cGF0aCBpZD0icGF0aDY4ODMtMi0zLTUtMi00LTktNC05IiBkPSJNNzQuOCAxMDYuNGMtMjAuNiAwLTM3LjQtMTYuNy0zNy40LTM3LjQgMC0yMC42IDE2LjctMzcuNCAzNy40LTM3LjQgMjAuNiAwIDM3LjQgMTYuNyAzNy40IDM3LjRzLTE2LjcgMzcuNC0zNy40IDM3LjQiIGZpbGw9IiNmZmYiLz48L2c+PC9nPjxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik05NS45IDQ2LjZWNDloLTEwdi0yLjVsMTAgLjF6bS0yIDUuM2gtOHYyLjVoOHYtMi41em0tOCA3LjloNnYtMi41aC02djIuNXptNCAyLjloLTR2Mi41aDR2LTIuNXptLTQgNy44aDJWNjhoLTJ2Mi41em0xLjUgMTRjMCA2LjktNS41IDEyLjUtMTIuMyAxMi41cy0xMi4zLTUuNi0xMi4zLTEyLjVjMC00LjUgMi4zLTguNSA2LjEtMTAuN1Y0NS41YzAtMy41IDIuOC02LjMgNi4yLTYuM3M2LjIgMi44IDYuMiA2LjN2MjguM2MzLjggMi4yIDYuMSA2LjMgNi4xIDEwLjd6bS0yLjQgMGMwLTMuOC0yLjEtNy4yLTUuNC04LjlsLS43LS4zVjQ1LjVjMC0yLjEtMS43LTMuOC0zLjgtMy44LTIuMSAwLTMuOCAxLjctMy44IDMuOHYyOS44bC0uNy4zYy0zLjMgMS43LTUuNCA1LjEtNS40IDguOSAwIDUuNSA0LjQgMTAgOS45IDEwUzg1IDkwIDg1IDg0LjV6bS0yLjEgMGMwIDQuNC0zLjUgOC03LjggOHMtNy44LTMuNi03LjgtOGMwLTMuNiAyLjQtNi44IDUuOC03LjdsLjUtLjFWNjEuNWgzLjF2MTUuMmwuNS4xYzMuMyAxIDUuNyA0LjEgNS43IDcuN3ptLTcuNC01LjNjLS4yLS44LTEtMS40LTEuOS0xLjItMyAuNy01IDMuMy01IDYuNCAwIC45LjcgMS42IDEuNiAxLjZzMS42LS43IDEuNi0xLjZjMC0xLjYgMS4xLTMgMi42LTMuMy43LS4yIDEuMy0xIDEuMS0xLjl6Ii8+PC9zdmc+",
+              "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJzdmc0NDA4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48c3R5bGU+LnN0MntmaWxsOiMyNzg2MjJ9PC9zdHlsZT48ZyBpZD0ibGF5ZXIxIj48ZyBpZD0icGF0aDY4ODEtMy01LTUtMS04LTQtNC03LTgiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNDYuNDM4IC0yNzYuMDI4KSIgb3BhY2l0eT0iLjg5MiI+PHJhZGlhbEdyYWRpZW50IGlkPSJTVkdJRF8xXyIgY3g9IjMwODUuMjE1IiBjeT0iMzE3OC40NTgiIHI9IjQ5LjkwMSIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguNjc5MyAuMDA3NiAtLjUwOSAuNTYxMiAtMjMyLjYyOSAtMTQxMS43MjUpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xODgiLz48L3JhZGlhbEdyYWRpZW50PjxwYXRoIGQ9Ik0yODUuNiAzODguNWMxMC4zLTEyLjQgNC40LTIyLjQtMTQuNC0yMi40LTE4LjkgMC00Mi40IDEwLTUzLjkgMjIuNC0xNi44IDE4IC40IDIzLjUtLjIgMzUtLjEgMS44IDMuOSAxLjggNyAwIDE5LjgtMTEuNSA0Ni41LTE3IDYxLjUtMzUiIGZpbGw9InVybCgjU1ZHSURfMV8pIi8+PC9nPjxwYXRoIGlkPSJwYXRoNjg4MS0zLTUtNS0xLTgtNC00IiBjbGFzcz0ic3QyIiBkPSJNMTI0LjcgNjkuMWMtLjktMjcuNS0yMi4zLTQ5LjgtNDkuOC00OS44cy00OSAyMi4zLTQ5LjggNDkuOGMtMS4zIDQwLjEgMzAuNyA1Mi4yIDQ0LjcgNzggMi4yIDQgOCA0IDEwLjEgMCAxNC4xLTI1LjggNDYuMS0zNy45IDQ0LjgtNzgiLz48L2c+PGcgaWQ9Imc0OTI4Ij48Y2lyY2xlIGlkPSJwYXRoNDk3OCIgY2xhc3M9InN0MiIgY3g9Ijc0LjkiIGN5PSI2OS4xIiByPSI0OS45Ii8+PGcgaWQ9Imc0OTE1Ij48cGF0aCBpZD0icGF0aDY4ODMtMi0zLTUtMi00LTktNC05IiBkPSJNNzQuOCAxMDYuNGMtMjAuNiAwLTM3LjQtMTYuNy0zNy40LTM3LjQgMC0yMC42IDE2LjctMzcuNCAzNy40LTM3LjQgMjAuNiAwIDM3LjQgMTYuNyAzNy40IDM3LjRzLTE2LjcgMzcuNC0zNy40IDM3LjQiIGZpbGw9IiNmZmYiLz48L2c+PC9nPjxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik05NS45IDQ2LjZWNDloLTEwdi0yLjVsMTAgLjF6bS0yIDUuM2gtOHYyLjVoOHYtMi41em0tOCA3LjloNnYtMi41aC02djIuNXptNCAyLjloLTR2Mi41aDR2LTIuNXptLTQgNy44aDJWNjhoLTJ2Mi41em0xLjUgMTRjMCA2LjktNS41IDEyLjUtMTIuMyAxMi41cy0xMi4zLTUuNi0xMi4zLTEyLjVjMC00LjUgMi4zLTguNSA2LjEtMTAuN1Y0NS41YzAtMy41IDIuOC02LjMgNi4yLTYuM3M2LjIgMi44IDYuMiA2LjN2MjguM2MzLjggMi4yIDYuMSA2LjMgNi4xIDEwLjd6bS0yLjQgMGMwLTMuOC0yLjEtNy4yLTUuNC04LjlsLS43LS4zVjQ1LjVjMC0yLjEtMS43LTMuOC0zLjgtMy44LTIuMSAwLTMuOCAxLjctMy44IDMuOHYyOS44bC0uNy4zYy0zLjMgMS43LTUuNCA1LjEtNS40IDguOSAwIDUuNSA0LjQgMTAgOS45IDEwUzg1IDkwIDg1IDg0LjV6bS0yLjEgMGMwIDQuNC0zLjUgOC03LjggOHMtNy44LTMuNi03LjgtOGMwLTMuNiAyLjQtNi44IDUuOC03LjdsLjUtLjFWNjEuNWgzLjF2MTUuMmwuNS4xYzMuMyAxIDUuNyA0LjEgNS43IDcuN3ptLTcuNC01LjNjLS4yLS44LTEtMS40LTEuOS0xLjItMyAuNy01IDMuMy01IDYuNCAwIC45LjcgMS42IDEuNiAxLjZzMS42LS43IDEuNi0xLjZjMC0xLjYgMS4xLTMgMi42LTMuMy43LS4yIDEuMy0xIDEuMS0xLjl6Ii8+PC9zdmc+Cg=="
+            ],
+            "useMarkerImageFunction": true,
+            "color": "#fe7569",
+            "mapProvider": "OpenStreetMap.HOT",
+            "showTooltip": true,
+            "autocloseTooltip": true,
+            "defaultCenterPosition": "0,0",
+            "customProviderTileUrl": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "showTooltipAction": "click",
+            "polygonKeyName": "coordinates",
+            "polygonOpacity": 0.5,
+            "polygonStrokeOpacity": 1,
+            "polygonStrokeWeight": 1,
+            "zoomOnClick": true,
+            "showCoverageOnHover": true,
+            "animate": true,
+            "maxClusterRadius": 80,
+            "removeOutsideVisibleBounds": true,
+            "defaultZoomLevel": 12,
+            "labelFunction": "var color;\nif(dsData[dsIndex].active !== \"true\"){\n    color = 'rgb(255, 0, 0)';\n} else {\n    color = 'rgb(39, 134, 34)';\n}\nreturn '<span style=\"border: solid ' + color + '; border-radius: 10px; color: ' + color + '; background-color: #fff; padding: 3px 5px; font-size: 14px\">' + \n           '${entityLabel}' + \n        '</span>'",
+            "markerImageFunction": "var res;\nif(dsData[dsIndex].active !== \"true\"){\n\tvar res = {\n\t    url: images[0],\n\t    size: 48\n\t}\n} else {\n    var res = {\n\t    url: images[1],\n\t    size: 48\n\t}\n}\nreturn res;",
+            "useLabelFunction": true,
+            "provider": "openstreet-map",
+            "draggableMarker": true,
+            "editablePolygon": true,
+            "mapPageSize": 16384
+          },
+          "title": "New Markers Placement - OpenStreetMap",
+          "dropShadow": true,
+          "enableFullscreen": false,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "useDashboardTimewindow": true,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {
+            "tooltipAction": [
+              {
+                "name": "delete",
+                "icon": "more_horiz",
+                "type": "custom",
+                "customFunction": "var entityDatasource = widgetContext.mapInstance.datasources.filter(\n    function(entity) {\n        return entity.entityId === entityId.id\n    });\n\nwidgetContext.mapInstance.saveMarkerLocation(entityDatasource[0], null, null).subscribe(function success() {\n        widgetContext.updateAliases();\n});",
+                "id": "54c293c4-9ca6-e34f-dc6a-0271944c1c66"
+              }
+            ]
+          },
+          "showTitleIcon": false,
+          "titleIcon": null,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "displayTimewindow": true,
+          "enableDataExport": false
+        },
+        "id": "a9311cc0-779e-ca01-546f-66ec7a887fcc"
+      },
       "c4631f94-2db3-523b-4d09-2a1a0a75d93f": {
         "isSystemType": true,
         "bundleAlias": "input_widgets",
@@ -1981,7 +2404,7 @@
               "filterId": null,
               "dataKeys": [
                 {
-                  "name": "temperatureAlarmFlag",
+                  "name": "temperatureHighAlarmFlag",
                   "type": "attribute",
                   "label": "High temperature alarm",
                   "color": "#4caf50",
@@ -1993,10 +2416,16 @@
                     "dataKeyHidden": false,
                     "step": 1
                   },
-                  "_hash": 0.8725278440159361
+                  "_hash": 0.8725278440159361,
+                  "aggregationType": null,
+                  "units": null,
+                  "decimals": null,
+                  "funcBody": null,
+                  "usePostProcessing": null,
+                  "postFuncBody": null
                 },
                 {
-                  "name": "temperatureAlarmThreshold",
+                  "name": "temperatureHighAlarmThreshold",
                   "type": "attribute",
                   "label": "High temperature threshold, °C",
                   "color": "#f44336",
@@ -2009,12 +2438,18 @@
                     "step": 1,
                     "disabledOnDataKey": "temperatureAlarmFlag"
                   },
-                  "_hash": 0.7316078472857874
+                  "_hash": 0.7316078472857874,
+                  "aggregationType": null,
+                  "units": null,
+                  "decimals": null,
+                  "funcBody": null,
+                  "usePostProcessing": null,
+                  "postFuncBody": null
                 },
                 {
-                  "name": "humidityAlarmFlag",
+                  "name": "temperatureLowAlarmFlag",
                   "type": "attribute",
-                  "label": "Low humidity alarm",
+                  "label": "Low temperature alarm",
                   "color": "#ffc107",
                   "settings": {
                     "dataKeyType": "server",
@@ -2024,12 +2459,18 @@
                     "dataKeyHidden": false,
                     "step": 1
                   },
-                  "_hash": 0.5339673667431057
+                  "_hash": 0.5339673667431057,
+                  "aggregationType": null,
+                  "units": null,
+                  "decimals": null,
+                  "funcBody": null,
+                  "usePostProcessing": null,
+                  "postFuncBody": null
                 },
                 {
-                  "name": "humidityAlarmThreshold",
+                  "name": "temperatureLowAlarmThreshold",
                   "type": "attribute",
-                  "label": "Low humidity threshold, %",
+                  "label": "Low temperature threshold, °C",
                   "color": "#607d8b",
                   "settings": {
                     "dataKeyType": "server",
@@ -2040,7 +2481,13 @@
                     "step": 1,
                     "disabledOnDataKey": "humidityAlarmFlag"
                   },
-                  "_hash": 0.2687091190358901
+                  "_hash": 0.2687091190358901,
+                  "aggregationType": null,
+                  "units": null,
+                  "decimals": null,
+                  "funcBody": null,
+                  "usePostProcessing": null,
+                  "postFuncBody": null
                 },
                 {
                   "name": "latitude",
@@ -2103,8 +2550,8 @@
               "interval": 1000,
               "timewindowMs": 60000,
               "fixedTimewindow": {
-                "startTimeMs": 1672334349918,
-                "endTimeMs": 1672420749918
+                "startTimeMs": 1672391097534,
+                "endTimeMs": 1672477497534
               },
               "quickInterval": "CURRENT_DAY"
             },
@@ -2276,12 +2723,62 @@
           }
         }
       },
+      "Monitor sensor": {
+        "name": "${entityName}",
+        "root": false,
+        "layouts": {
+          "main": {
+            "widgets": {
+              "38f9f1df-72ef-aec8-970e-72bf717cdb41": {
+                "sizeX": 7,
+                "sizeY": 4,
+                "row": 0,
+                "col": 0
+              },
+              "c5ea9382-57e5-6abb-9081-515f60e73b52": {
+                "sizeX": 10,
+                "sizeY": 8,
+                "row": 0,
+                "col": 7
+              }
+            },
+            "gridSettings": {
+              "backgroundColor": "#eeeeee",
+              "columns": 24,
+              "margin": 10,
+              "backgroundSizeMode": "100%"
+            }
+          }
+        }
+      },
       "Monitor motor": {
         "name": "${entityName}",
         "root": false,
         "layouts": {
           "main": {
             "widgets": {},
+            "gridSettings": {
+              "backgroundColor": "#eeeeee",
+              "columns": 24,
+              "margin": 10,
+              "backgroundSizeMode": "100%"
+            }
+          }
+        }
+      },
+      "edit motor": {
+        "name": "Edit motor location",
+        "root": false,
+        "layouts": {
+          "main": {
+            "widgets": {
+              "a9311cc0-779e-ca01-546f-66ec7a887fcc": {
+                "sizeX": 24,
+                "sizeY": 14,
+                "row": 0,
+                "col": 0
+              }
+            },
             "gridSettings": {
               "backgroundColor": "#eeeeee",
               "columns": 24,
